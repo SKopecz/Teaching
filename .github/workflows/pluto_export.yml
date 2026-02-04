@@ -1,0 +1,30 @@
+name: Pluto Interactive Export
+on:
+  push:
+    branches: [main] # Startet jedes Mal, wenn du etwas hochlädst
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Install Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.11'
+
+      - name: Install Packages and Export
+        run: |
+          julia -e '
+            using Pkg
+            Pkg.add(["PlutoSliderServer", "PlutoUI", "Plots", "LaTeXStrings"])
+            using PlutoSliderServer
+            export_notebook("Taylor_Polynome.jl")
+          '
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          branch: gh-pages # Die Webseite wird in diesem neuen Branch gespeichert
