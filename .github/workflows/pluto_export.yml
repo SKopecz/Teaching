@@ -1,4 +1,4 @@
-name: Export All Pluto Notebooks
+name: Export Pluto Notebooks
 on:
   push:
     branches: [main]
@@ -6,6 +6,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -18,17 +20,12 @@ jobs:
       - name: Install PlutoSliderServer
         run: julia -e 'using Pkg; Pkg.add("PlutoSliderServer")'
 
-      - name: Export All Notebooks
-        run: |
-          julia -e '
-            using PlutoSliderServer;
-            export_directory("."); 
-          '
+      - name: Export Notebooks
+        run: julia -e 'using PlutoSliderServer; export_directory(".")'
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
-          # Die Action nimmt jetzt alle .html Dateien, die erzeugt wurden
-          keep_files: true
+          force_orphan: true
