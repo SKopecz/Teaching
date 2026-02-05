@@ -1,31 +1,22 @@
-name: Export Pluto Notebooks
+name: Pluto Export
 on:
   push:
     branches: [main]
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Julia
+      - name: Install Julia
         uses: julia-actions/setup-julia@v2
         with:
-          version: '1'
-
-      - name: Install PlutoSliderServer
-        run: julia -e 'using Pkg; Pkg.add("PlutoSliderServer")'
-
-      - name: Export Notebooks
-        run: julia -e 'using PlutoSliderServer; export_directory(".")'
-
+          version: '1.11'
+      - name: Run PlutoSliderServer
+        run: |
+          julia -e 'using Pkg; Pkg.add("PlutoSliderServer"); using PlutoSliderServer; export_notebook("Taylor_Polynome.jl")'
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          force_orphan: true
+          folder: .
+          branch: gh-pages # Erstellt einen extra Zweig für die Webseite
