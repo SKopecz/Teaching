@@ -19,15 +19,14 @@ jobs:
         run: |
           julia -e '
             using Pkg
-            Pkg.add(["PlutoSliderServer", "PlutoUtils"])
+            Pkg.add(["PlutoSliderServer"])
             using PlutoSliderServer
             
             # Wir erzwingen den Export mit "gebackenen" Zuständen
             # "." bedeutet: Suche im Hauptverzeichnis des Repos
-            PlutoSliderServer.export_directory("."; 
-                Export_baked_state=true, 
-                Export_offer_binder=false,
-                quiet_mode=false)
+			PlutoSliderServer.export_directory(".";
+    			export_path   = "export",
+			    precompute    = true)
           '
 
       - name: Deploy to GitHub Pages
