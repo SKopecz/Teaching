@@ -19,14 +19,15 @@ jobs:
         run: |
           julia -e '
             using Pkg
-            Pkg.activate(".")
-            Pkg.instantiate()
-            
+            Pkg.add(["PlutoSliderServer", "PlutoUtils"])
             using PlutoSliderServer
             
-            # Das ist der entscheidende Befehl!
-            # Er scannt den Ordner, findet Slider und berechnet die Bilder vor.
-            PlutoSliderServer.export_directory(".")
+            # Wir erzwingen den Export mit "gebackenen" Zuständen
+            # "." bedeutet: Suche im Hauptverzeichnis des Repos
+            PlutoSliderServer.export_directory("."; 
+                Export_baked_state=true, 
+                Export_offer_binder=false,
+                quiet_mode=false)
           '
 
       - name: Deploy to GitHub Pages
