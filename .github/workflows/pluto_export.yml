@@ -19,18 +19,18 @@ jobs:
         run: |
           julia -e '
             using Pkg
-            # Activate the environment and install dependencies from Project.toml
+            # Activate the environment from the repository Project.toml
             Pkg.activate(".")
             Pkg.instantiate()
             
             using PlutoSliderServer
             
-            # Loop through all files to find Julia notebooks
+            # Search for all Julia files in the root directory
             for file in readdir()
                 if endswith(file, ".jl")
-                    println("Exporting $file...")
-                    # save_everystep = false prevents creating huge state files
-                    export_notebook(file; Export_save_everystep = false)
+                    println("Exporting: ", file)
+                    # Using the standard export function without extra keywords
+                    export_notebook(file)
                 end
             end
           '
