@@ -1,5 +1,4 @@
 name: Pluto Interactive Export
-name: Pluto Interactive Export
 on:
   push:
     branches: [main]
