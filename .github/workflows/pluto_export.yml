@@ -1,8 +1,3 @@
-Das macht die Sache viel effizienter! Wenn du mehrere Notebooks hast, ist es mühsam, jedes einzeln aufzuführen. Wir nutzen stattdessen die Funktion export_directory, die den gesamten Ordner scannt und alle .jl-Dateien (die Pluto-Notebooks sind) in einem Rutsch umwandelt.
-
-Hier ist die optimierte .github/workflows/export.yml:
-YAML
-
 name: Export All Pluto Notebooks
 on:
   push:
