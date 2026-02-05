@@ -1,3 +1,0 @@
-[Export]
-# This tells Pluto to pre-calculate and store the results for all slider positions
-baked_state = true
