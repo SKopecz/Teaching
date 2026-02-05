@@ -24,10 +24,10 @@ jobs:
             
             # Wir erzwingen den Export mit "gebackenen" Zuständen
             # "." bedeutet: Suche im Hauptverzeichnis des Repos
-			PlutoSliderServer.export_directory(".";
-    			export_path   = "export",
-			    precompute    = true)
-          '
+			PlutoSliderServer.export_directory("."; 
+				export_path = "export", 
+				precompute = true)
+			'
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
