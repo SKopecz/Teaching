@@ -1,5 +1,5 @@
 ### Aktuelle Themen:
-* [Taylor-Polynome: Sinus-Konvergenz](taylor_polynome.html)
+* [Taylor-Polynome](taylor_polynome.html)
 * [Weitere Themen folgen bald...](#)
 
 ---
