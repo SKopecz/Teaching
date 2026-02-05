@@ -6,6 +6,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -19,18 +21,15 @@ jobs:
         run: |
           julia -e '
             using Pkg
-            # Activate the environment and install dependencies from Project.toml
             Pkg.activate(".")
             Pkg.instantiate()
             
             using PlutoSliderServer
             
-            # Loop through all files to find Julia notebooks
             for file in readdir()
                 if endswith(file, ".jl")
                     println("Exporting $file...")
-                    # save_everystep = false prevents creating huge state files
-                    export_notebook(file; save_everystep = false)
+                    export_notebook(file)
                 end
             end
           '
