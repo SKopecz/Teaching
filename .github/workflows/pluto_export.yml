@@ -1,4 +1,5 @@
 name: Pluto Interactive Export
+name: Pluto Interactive Export
 on:
   push:
     branches: [main]
@@ -26,8 +27,9 @@ jobs:
             
             using PlutoSliderServer
             
+            # Exportiert jedes Notebook in eine HTML-Datei
             for file in readdir()
-                if endswith(file, ".jl")
+                if endswith(file, ".jl") && file != "manifest.jl"
                     println("Exporting $file...")
                     export_notebook(file)
                 end
@@ -37,5 +39,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: .
-          branch: gh-pages
+          folder: .        # Das gesamte Verzeichnis hochladen
+          branch: gh-pages # In diesen Branch
+          clean: false     # WICHTIG: Bestehende Dateien wie index.md nicht löschen
