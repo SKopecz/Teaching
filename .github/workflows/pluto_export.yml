@@ -15,7 +15,7 @@ jobs:
         with:
           version: '1.11'
 
-      - name: Install Packages and Export All Notebooks
+      - name: Install Packages and Export
         run: |
           julia -e '
             using Pkg
@@ -24,14 +24,9 @@ jobs:
             
             using PlutoSliderServer
             
-            # Export all .jl files using the deployment configuration
-            for file in readdir()
-                if endswith(file, ".jl")
-                    println("Exporting: ", file)
-                    # We pass the config file to allow pre-calculation of slider states
-                    export_notebook(file; config_toml_path="PlutoDeployment.toml")
-                end
-            end
+            # Das ist der entscheidende Befehl!
+            # Er scannt den Ordner, findet Slider und berechnet die Bilder vor.
+            PlutoSliderServer.export_directory(".")
           '
 
       - name: Deploy to GitHub Pages
