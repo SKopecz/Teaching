@@ -1,0 +1,4 @@
+[Export]
+# This is required so the GitHub Action can execute the code
+# to pre-calculate all slider states for the interactive HTML.
+run_untrusted_code = true

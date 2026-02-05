@@ -19,18 +19,17 @@ jobs:
         run: |
           julia -e '
             using Pkg
-            # Activate the environment from the repository Project.toml
             Pkg.activate(".")
             Pkg.instantiate()
             
             using PlutoSliderServer
             
-            # Search for all Julia files in the root directory
+            # Export all .jl files using the deployment configuration
             for file in readdir()
                 if endswith(file, ".jl")
                     println("Exporting: ", file)
-                    # Using the standard export function without extra keywords
-                    export_notebook(file)
+                    # We pass the config file to allow pre-calculation of slider states
+                    export_notebook(file; config_toml_path="PlutoDeployment.toml")
                 end
             end
           '
