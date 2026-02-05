@@ -30,7 +30,7 @@ jobs:
                 if endswith(file, ".jl")
                     println("Exporting $file...")
                     # save_everystep = false prevents creating huge state files
-                    export_notebook(file; save_everystep = false)
+                    export_notebook(file; Export_save_everystep = false)
                 end
             end
           '
