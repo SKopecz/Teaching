@@ -1,4 +1,9 @@
-name: Pluto Interactive Export
+Das macht die Sache viel effizienter! Wenn du mehrere Notebooks hast, ist es mühsam, jedes einzeln aufzuführen. Wir nutzen stattdessen die Funktion export_directory, die den gesamten Ordner scannt und alle .jl-Dateien (die Pluto-Notebooks sind) in einem Rutsch umwandelt.
+
+Hier ist die optimierte .github/workflows/export.yml:
+YAML
+
+name: Export All Pluto Notebooks
 on:
   push:
     branches: [main]
@@ -7,30 +12,28 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Julia
+      - name: Setup Julia
         uses: julia-actions/setup-julia@v2
         with:
-          version: '1.11'
+          version: '1'
 
-      - name: Install Packages and Export
+      - name: Install PlutoSliderServer
+        run: julia -e 'using Pkg; Pkg.add("PlutoSliderServer")'
+
+      - name: Export All Notebooks
         run: |
           julia -e '
-            using Pkg
-            Pkg.add(["PlutoSliderServer"])
-            using PlutoSliderServer
-            
-            # Wir erzwingen den Export mit "gebackenen" Zuständen
-            # "." bedeutet: Suche im Hauptverzeichnis des Repos
-			PlutoSliderServer.export_directory("."; 
-				export_path = "export", 
-				precompute = true)
-			'
+            using PlutoSliderServer;
+            export_directory("."); 
+          '
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          folder: .
-          branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          # Die Action nimmt jetzt alle .html Dateien, die erzeugt wurden
+          keep_files: true
