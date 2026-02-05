@@ -1,22 +1,42 @@
-name: Pluto Export
+name: Pluto Interactive Export
 on:
   push:
     branches: [main]
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Repo
         uses: actions/checkout@v4
+
       - name: Install Julia
         uses: julia-actions/setup-julia@v2
         with:
           version: '1.11'
-      - name: Run PlutoSliderServer
+
+      - name: Install Packages and Export All Notebooks
         run: |
-          julia -e 'using Pkg; Pkg.add("PlutoSliderServer"); using PlutoSliderServer; export_notebook("Taylor_Polynome.jl")'
+          julia -e '
+            using Pkg
+            # Activate the environment and install dependencies from Project.toml
+            Pkg.activate(".")
+            Pkg.instantiate()
+            
+            using PlutoSliderServer
+            
+            # Loop through all files to find Julia notebooks
+            for file in readdir()
+                if endswith(file, ".jl")
+                    println("Exporting $file...")
+                    # save_everystep = false prevents creating huge state files
+                    export_notebook(file; save_everystep = false)
+                end
+            end
+          '
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: .
-          branch: gh-pages # Erstellt einen extra Zweig für die Webseite
+          branch: gh-pages
