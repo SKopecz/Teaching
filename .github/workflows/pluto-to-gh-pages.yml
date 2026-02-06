@@ -33,6 +33,10 @@ jobs:
       - name: Export Pluto notebooks to HTML
         run: julia --project=. scripts/export_pluto.jl
 
+      - name: Prepare files for Jekyll
+        run: |
+          cp index.md public/
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -40,4 +44,4 @@ jobs:
           publish_dir: ./public
           publish_branch: gh-pages
           commit_message: 'Deploy Pluto HTML via GitHub Actions'
-          nojekyll: true
+          enable_jekyll: true
