@@ -1,0 +1,46 @@
+# Build & deploy Pluto notebooks to GitHub Pages
+name: Build & deploy Pluto notebooks
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'notebooks/**'
+      - 'scripts/**'
+      - '.github/workflows/pluto-to-gh-pages.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Julia
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: '1.9' # change if you need a different Julia release
+
+      - name: Restore project (if Project.toml exists)
+        run: |
+          if [ -f Project.toml ]; then
+            julia -e 'import Pkg; Pkg.activate("."); Pkg.instantiate()'
+          else
+            echo "No Project.toml found — workflow will install exporter package temporarily."
+          fi
+
+      - name: Export Pluto notebooks to HTML
+        # runs the export script (scripts/export_pluto.jl)
+        run: julia --project=. scripts/export_pluto.jl
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
+          # optional: set a specific commit message
+          commit_message: 'Deploy Pluto HTML via GitHub Actions'
